@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="styles.css">
+	<title>
+	ABC Supervisor
+</title>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+$(document).ready( function(){
+
+alert("Running script");
+
+$("#sSales").click(function(){
+alert("clicked");
+$.ajax(	{
+	url:"http://localhost:8080/webserv1/resources/ws2/inventory",
+	type:"GET",
+	dataType:"text",
+	success: function(result)
+	{
+	alert("success");
+	
+	$("#p_setSales").html(result);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#p_setSales").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+	
+
+$("#Add_Inventory").click(function(){
+alert("clicked");
+var inputUPC=document.getElementById("t_UPC").value;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/"+inputUPC;
+$.ajax(	{
+
+	url:theUrl,
+	type:"GET",
+	dataType:"text",
+	success: function(result)
+	{
+	var resultArray=JSON.parse(result)
+	var output ="<h3> Ingredient requested</h3>";
+	output+=<ul
+	alert("success");
+	
+	$("#p_setSales2").html(result);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#p_setSales2").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+});// End document get ready
+</script>
+</head>
+
+<body>
+	<h1> 
+
+	ABC Convenience Market
+
+	</h1>
+	<!-- border style dictacting from top,right,down, left-->
+	<div style="background-color:cyan;min-height:40px">
+	</div>
+	<div id="mainButtons">
+		<button id="Add_Inventory">Add</button><button id="sSales">Set Sales</button><button id="daily">Get Daily</button><button id="void">Void</button>
+		<br><button id="ballon">Helium</button><button>Press Me</button><button>Press Me</button><button>Press Me</button>
+		<br><button>Press Me</button><button>Press Me</button><button>Press Me</button><button>Press Me</button>
+		<br><button>Press Me</button><button>Press Me</button><button>Press Me</button><button>Press Me</button>
+	</div>
+	<!--
+	<div id="managementButtons">
+		<button class="supervisor" id="return">Return</button><button class="supervisor" id= "credit">Credit</button><button class="supervisor">Press Me</button><button class="supervisor" id="cancel">Cancel</button>
+		<br><button class="supervisor" id="oLotto">Online</button><button class="supervisor" id="iLotto"> Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button>
+		<br><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button>
+		<br><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button>
+		<br>
+		<button id="Manager" style="width: 150px; heght: 100px; background-color:RGB(255 100 100)">Switch to Manager Mode</button>
+	</div>
+	-->
+	
+
+	
+	<div id="numpad">
+		<button id="7">7</button><button id="8">8</button><button id="9">9</button><button id="count">#</button>
+		<br><button id="4">4</button><button id="5">5</button><button id="6">6</button>
+		<br><button id="1">1</button><button id="2">2</button><button id="3">3</button><button id="clear">C</button>
+		<br><button id="*">*</button><button id="0">0</button><button id="point">.</button><button id="enter">Enter</button>
+	
+	</div>
+	<div id="upc">
+		
+		UPC:
+		
+		<input type="text" id="t_UPC" name="t_UPC" value="0">
+		
+		
+	</div>
+
+	<div id="receipt">
+	<table id="table">
+		<tr>
+		<td class="product" id="receipt1Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt1Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt1Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt2Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt2Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt2Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt3Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt3Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt3Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt4Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt4Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt4Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt5Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt5Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt5Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt6Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt6Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt6Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt7Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt7Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt7Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt8Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt8Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt8Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt9Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt9Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt9Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt10Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt10Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt10Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt11Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt11Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt11Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt12Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt12Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt12Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt13Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt13Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt13Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt14Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt14Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt14Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt15Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt15Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt15Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt16Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt16Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt16Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt17Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt17Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt17Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt18Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt18Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt18Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+	<tr>
+		<td class="product" id="receipt19Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt19Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt19Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+	<tr>
+		<td class="product" id="receipt20Item"> Test</td>
+		<td class="itemQuantity" align="right" id="receipt20Quantity" > Quant</td>
+		<td class="cost" align="right"  id="receipt20Price"> Price</td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+	
+	
+	</table>
+	</div>
+	
+	
+	<!-- Put the js files here to improve load times.
+	-->
+	<!--<script src="ProductControl.js"></script> -->
+	<script src ="numpad.js"></script>
+	
+</body>
+</html>
