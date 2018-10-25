@@ -1,0 +1,138 @@
+body
+{background-color:rgb(0,120,86);
+	
+}
+
+h1
+{
+text-align:center;
+font-size:60px;
+color:cyan ;
+background-image:url('FoodBkgrd.jpg');background-repeat: repeat-none
+ height:100px width:10px;
+	
+}
+
+button
+{
+	background-color:white;
+	width:100px;
+	height:75px;
+	padding:10 px;
+}
+ul
+{
+	margin: 0;
+	list-style-type: none;
+	margin-bottom:0;
+}
+table{
+	width:380px;
+}
+/*
+Class Styles
+*/
+
+.admin
+{
+}
+.supervisor
+{
+	background-color:grey;
+	width: 100px;
+	height: 75px;
+}
+.main
+{
+	width:150px;
+	height:100px;
+	font-size: 20px;
+	
+}
+
+.product{
+	width:190px;
+}
+.cost
+{
+	
+	color:red;
+	width:70px;
+}
+.itemQuantity
+{
+	width:120px;
+}
+
+/*id configurations */
+#managementButtons {
+	margin-top: 20px; /* The space between the two sections of buttons */
+	
+	
+	
+}
+
+#mainButtons {
+	position: absolute;  /* Sets this block to be positioned without any regard to other elements */
+	left: 450px;		 /* Distance from the left of the page */
+	top: 190px;			 /* Distance from the top of the page */
+}
+#numpad
+{
+	position:absolute;
+	left:450px;
+	top:600px;
+	
+}
+#upc
+{
+	position:absolute;
+	left:450px;
+	top: 900px;
+	width:300px;
+}
+
+#upc input[type=text] {
+	height: 50px;
+	width: 390px;
+}
+#upc input[type = submit]
+{
+	height: 50px;	
+	width: 395px;
+
+}
+#receipt
+{
+	position:absolute;
+	left: 1100px;
+	top:195px;
+	background-color:white;
+	width:400px;
+	height: 600px;
+	border:solid 5px;
+	font-size:21px;
+	
+	
+}
+
+#receiptText
+{
+	font-size: 22px;
+	margin-bottom:10px;
+}
+#totalsection
+{
+	position:absolute;
+	left: 1100px;
+	top: 800px;
+	height:75px;
+	width: 370px;
+	padding: 15px;
+	background-color:grey;
+	border:solid 5px;
+	font-size:21px;
+}
+#subtotal{
+	background-color: grey;
+}
