@@ -1,0 +1,47 @@
+#mainButtons {
+	position: absolute;  /* Sets this block to be positioned without any regard to other elements */
+	left: 450px;		 /* Distance from the left of the page */
+	top: 190px;			 /* Distance from the top of the page */
+}
+#numpad
+{
+	position:absolute;
+	left:450px;
+	top:500px;
+	
+}
+
+#upc
+{
+	position:absolute;
+	left:450px;
+	top: 800px;
+	width:390px;
+}
+
+#upc input[type=text] {
+	height: 50px;
+	width: 390px;
+}
+#upc input[type = submit]
+{
+	height: 50px;	
+	width: 395px;
+	
+}
+
+#NAV
+{
+	position: relative;  /* Sets this block to be positioned without any regard to other elements */
+	top: 500px;
+	width: 100px;
+	height:100px;
+}
+#createProduct
+{	padding:30px;
+	width:175px;
+	height: 300px;
+	position: absolute;	
+	left:50px;
+	top: 200px;
+}
