@@ -1,4 +1,3 @@
-package com.cs490;
 import java.util.Scanner;
 
 public class Product {
@@ -112,6 +111,7 @@ public void setSale(double newSale)
 public void setQuantity(double quantity)
 {
 	this.quantity=quantity;
+	setPurchasePrice();
 	
 }
 
@@ -120,11 +120,15 @@ public double getQuantity(double quantity)
 	return quantity;
 	
 }
+
+public double getItemQuantity() {
+	return quantity;
+}
 public void setPurchasePrice()
 {
 	purchasePrice=purchasePrice(quantity);
 }
-public void getPurchasePrice()
+public double getPurchasePrice()
 {
 	return purchasePrice(quantity);// Calling function again to recalculate the product's price in case of change to price/quantity
 }
