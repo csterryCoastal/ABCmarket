@@ -257,7 +257,9 @@ public class StoreServices {
 			 */
 			
 		}
-
+                
+	
+	        //John 's code
 		
 		@Path("/inventory/add")
 		@POST
