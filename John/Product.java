@@ -120,7 +120,8 @@ public double getQuantity(double quantity)
 	return quantity;
 	
 }
-
+	
+	// John created this accessor
 public double getItemQuantity() {
 	return quantity;
 }
