@@ -32,6 +32,7 @@ import javax.naming.NamingException;
 public class StoreFacade {
 
 	private static StoreFacade singleton;
+	//John added this arraylist
     private static ArrayList<Product> shoppingCart;
 	private static Connection Scon;
 	//private StoreDataAccess Sdao;
@@ -263,6 +264,8 @@ public class StoreFacade {
 		//return true;
 	}
 	
+	// John's code
+	
     public Product addCartItem(String id,String quantity) throws ClassNotFoundException, NamingException, SQLException {
 		
 		  Product pro=getInventoryId(id);
@@ -272,6 +275,9 @@ public class StoreFacade {
 		
 		return pro;
 	}
+	
+	
+
 	public Product deleteCartItem(String id) throws SQLException, ClassNotFoundException, NamingException {
 		int intUPC=0;
 		try
