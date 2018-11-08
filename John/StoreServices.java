@@ -326,14 +326,17 @@ public class StoreServices {
 		}
 		
 		@Path("/inventory/checkout")
-		@GET
+		@POST
 		@Produces("text/plain")
-		public static String checkout() throws NamingException, SQLException, ClassNotFoundException{
-			
+		@Consumes("application/x-www-form-urlencoded")
+		public static String checkout(MultivaluedMap<String,String> formFields) throws NamingException, SQLException, ClassNotFoundException{
+			double price =Double.parseDouble(formFields.getFirst("price"));
 
 			StoreFacade sFacade = new StoreFacade();
-			String result = sFacade.checkout();
-				return result;//rb.build();
+			String result = sFacade.checkout(price);
+			
+			if(result!= null) {
+			return result;//rb.build();
 				
 			} else {
 				return "Fail";//Response.status(700).build();
