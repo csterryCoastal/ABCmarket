@@ -6,14 +6,164 @@
 	<title>
 	ABC market
 </title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
 <script>
 $(document).ready( function(){
 
+
 alert("Running script");
-var coupon=0;
+var   Total=0;
+var coupon =0;
+  $("#btnAddItem").click(function(){
+//alert("clicked");
+var UPC=document.getElementById("t_UPC").value;
+var quantity = document.getElementById("t_QUANTITY").value;
+var theData="UPC="+UPC+"&"+"quantity="+quantity;
     
-$("#btnAddEggs").click(function(){
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/add/";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArray);
+        
+	var output ="<h3> Add Item to Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=0;i<resultArrayA.length+1;i++)
+	{
+		
+		output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA.quantity[i]+"   " +resultArrayA.getPurchasePrice[i]+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i].name);
+       $("#"+quantval+"").text(resultArrayA[i].quantity);
+       $("#"+priceVal).text(resultArrayA[i].getPurchasePrice);
+	}
+        
+        var subTotal=0;
+    for( var i=0;i<resultArrayA.length+1;i++)
+        {
+            subTotal+=resultArrayA[i].getPurchasePrice; 
+            
+        }
+        subTotal-=coupon;
+        $("#subTotal").text(subTotal);
+        var Tax = 0.06*subTotal;
+        $("#tax").text(Tax);
+        Total = Tax + subTotal;
+        $("#total").text(Total);
+        
+	output+="</ul>";
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+	
+	$("#btnDeleteItem").click(function(){
+//alert("clicked");
+var UPC=document.getElementById("t_UPC").value;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/delete/"+UPC;
+$.ajax(	{
+
+	url:theUrl,
+	type:"GET",
+	dataType:"text",
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArrayA);
+	//resultArray=resultArrayA[UPC];
+	var output ="<h3> Delete Item from Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=0;i<resultArray.length+1;i++)
+	{
+		output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA.quantity[i]+"   " +resultArrayA.getPurchasePrice[i]+"</li>";
+        var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i].name);
+       $("#"+quantval+"").text(resultArrayA[i].quantity);
+       $("#"+priceVal).text(resultArrayA[i].getPurchasePrice);
+	}
+        
+        var subTotal=0;
+    for( var i=0;i<resultArrayA.length+1;i++)
+        {
+            subTotal+=resultArrayA[i].getPurchasePrice; 
+            
+        }
+        $("#subTotal").text(subTotal);
+        var Tax = 0.06*subTotal;
+        $("#tax").text(Tax);
+        Total = Tax + subTotal;
+        $("#total").text(Total);
+        
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+	
+	$("#btnCheckout").click(function(){
+//alert("clicked");
+var theData = "price="+Total;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/checkout";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArrayA);
+	//resultArray=resultArrayA[UPC];
+	var output ="<h3> Checkout </h3>";
+	output+="<ul>";
+	/*
+        output+ = "<li>" + resultArrayA + "</li>";
+		*/
+    
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+ 
+	$("#btnAddEggs").click(function(){
 //alert("clicked");
 var UPC=12
 var quantity = 1
@@ -57,9 +207,9 @@ $.ajax(	{
         subTotal-=coupon;
         $("#subTotal").text(subTotal);
         var Tax = 0.06*subTotal;
-        $("#Tax").text(Tax);
+        $("#tax").text(Tax);
         var Total = Tax + subTotal;
-        $("#Total").text(Total);
+        $("#total").text(Total);
         
 	output+="</ul>";
 	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
@@ -74,8 +224,8 @@ $.ajax(	{
 	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
 	});
 	});
-    
-    $("#btnAddApples").click(function(){
+	
+	$("#btnAddApples").click(function(){
 //alert("clicked");
 var UPC=13
 var quantity = 1
@@ -119,9 +269,9 @@ $.ajax(	{
         subTotal-=coupon;
         $("#subTotal").text(subTotal);
         var Tax = 0.06*subTotal;
-        $("#Tax").text(Tax);
+        $("#tax").text(Tax);
         var Total = Tax + subTotal;
-        $("#Total").text(Total);
+        $("#total").text(Total);
         
 	output+="</ul>";
 	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
@@ -136,8 +286,8 @@ $.ajax(	{
 	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
 	});
 	});
-   
-    $("#btnAddTomatoes").click(function(){
+	
+	$("#btnAddTomatoes").click(function(){
 //alert("clicked");
 var UPC=14
 var quantity = 1
@@ -181,9 +331,9 @@ $.ajax(	{
         subTotal-=coupon;
         $("#subTotal").text(subTotal);
         var Tax = 0.06*subTotal;
-        $("#Tax").text(Tax);
+        $("#tax").text(Tax);
         var Total = Tax + subTotal;
-        $("#Total").text(Total);
+        $("#total").text(Total);
         
 	output+="</ul>";
 	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
@@ -198,8 +348,8 @@ $.ajax(	{
 	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
 	});
 	});
-    
-    $("#btnAddMilk").click(function(){
+	
+	$("#btnAddMilk").click(function(){
 //alert("clicked");
 var UPC= 15
 var quantity = 1
@@ -260,186 +410,36 @@ $.ajax(	{
 	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
 	});
 	});
-    
-     
-  $("#coupon$10").click(function(){  
+    /*
+	$("#coupon$10").click(function(){  
       
       coupon=coupont+10;
-  }
-
+       
+  });
+  
   $("#coupon$5").click(function(){  
       
       coupon=coupont+5;
-  }
+  });
     
       
   $("#coupon$2").click(function(){  
       
       coupon=coupont+2;
-  } 
+  } );
     
     
     
   $("#coupon$1").click(function(){  
       
       coupon=coupont+1;
-  }
+  });
+  */
+	
+}); //end of get ready
     
-    
-    
-$("#btnAddItem").click(function(){
-//alert("clicked");
-var UPC=document.getElementById("t_UPC").value;
-var quantity = document.getElementById("t_QUANTITY").value;
-var theData="UPC="+UPC+"&"+"quantity="+quantity;
-    
-var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/add/";
-$.ajax(	{
-
-	url:theUrl,
-	type:"POST",
-	dataType:"text",
-	contentType:"application/x-www-form-urlencoded",
-	data:theData,
-	success: function(result)
-	{
-	var resultArrayA=JSON.parse(result);
-	//alert(resultArray);
-        
-	var output ="<h3> Add Item to Shopping Cart</h3>";
-	output+="<ul>";
-	for( var i=0;i<resultArrayA.length+1;i++)
-	{
-		
-		output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA.quantity[i]+"   " +resultArrayA.getPurchasePrice[i]+"</li>";
-		
-	var itemVal= "receipt"+i+"Item";
-        var quantval= "receipt"+i+"Quantity";
-        var priceVal= "receipt"+i+"Price";
-
-       $("#"+itemVal+"").text(resultArrayA[i].name);
-       $("#"+quantval+"").text(resultArrayA[i].quantity);
-       $("#"+priceVal).text(resultArrayA[i].getPurchasePrice);
-	}
-        
-        var subTotal=0;
-    for( var i=0;i<resultArrayA.length+1;i++)
-        {
-            subTotal+=resultArrayA[i].getPurchasePrice; 
-            
-        }
-        subTotal-=coupon;
-        $("#subTotal").text(subTotal);
-        var Tax = 0.06*subTotal;
-        $("#Tax").text(Tax);
-        var Total = Tax + subTotal;
-        $("#Total").text(Total);
-        
-	output+="</ul>";
-	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
-	<!-- private double salePercent;-->
-	//alert("success");
-	//alert(output);
-	$("#justModified").html(output);
-	},
-	error:function(xhr)
-	{
-	alert("error");
-	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
-	});
-	});
-    
-$("#btnDeleteItem").click(function(){
-//alert("clicked");
-var UPC=document.getElementById("t_UPC").value;
-var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/delete/"+UPC;
-$.ajax(	{
-
-	url:theUrl,
-	type:"GET",
-	dataType:"text",
-	success: function(result)
-	{
-	var resultArrayA=JSON.parse(result);
-	//alert(resultArrayA);
-	//resultArray=resultArrayA[UPC];
-	var output ="<h3> Delete Item from Shopping Cart</h3>";
-	output+="<ul>";
-	for( var i=0;i<resultArray.length+1;i++)
-	{
-		output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA.quantity[i]+"   " +resultArrayA.getPurchasePrice[i]+"</li>";
-        var itemVal= "receipt"+i+"Item";
-        var quantval= "receipt"+i+"Quantity";
-        var priceVal= "receipt"+i+"Price";
-
-       $("#"+itemVal+"").text(resultArrayA[i].name);
-       $("#"+quantval+"").text(resultArrayA[i].quantity);
-       $("#"+priceVal).text(resultArrayA[i].getPurchasePrice);
-	}
-        
-        var subTotal=0;
-    for( var i=0;i<resultArrayA.length+1;i++)
-        {
-            subTotal+=resultArrayA[i].getPurchasePrice; 
-            
-        }
-        $("#subTotal").text(subTotal);
-        var Tax = 0.06*subTotal;
-        $("#Tax").text(Tax);
-        var Total = Tax + subTotal;
-        $("#Total").text(Total);
-        
-	output+="</ul>";
-	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
-	<!-- private double salePercent;-->
-	//alert("success");
-	//alert(output);
-	$("#justModified").html(output);
-	},
-	error:function(xhr)
-	{
-	alert("error");
-	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
-	});
-	});
-    
-$("#btnCheckout").click(function(){
-//alert("clicked");
-
-var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/checkout";
-$.ajax(	{
-
-	url:theUrl,
-	type:"GET",
-	dataType:"text",
-	success: function(result)
-	{
-	var resultArrayA=JSON.parse(result);
-	//alert(resultArrayA);
-	//resultArray=resultArrayA[UPC];
-	var output ="<h3> Checkout </h3>";
-	output+="<ul>";
-	 
-        output+ = resultArrayA;
-        
-	output+="</ul>";
-	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
-	<!-- private double salePercent;-->
-	//alert("success");
-	//alert(output);
-	$("#justModified").html(output);
-	},
-	error:function(xhr)
-	{
-	alert("error");
-	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
-	});
-	});
-
-
-</script>   
+</script>
 </head>
-
 <body>
 	<h1> 
 
@@ -452,17 +452,15 @@ $.ajax(	{
 	</div>
 	
 	<div id="leftButtons">
-		<button id="coupon$10">Coupon$10</button><button id="btnAddEggs">Eggs</button><button>Press Me</button><button id="void">Void</button>
-		<br><button id="coupon$5">Coupon$5</button><button id="btnAddApples">Apples</button><button>Press Me</button><button>Press Me</button>
-		<br><button id="coupon$2">Coupon$2</button><button id="btnAddTomatoes">Tomatoes</button><button>Press Me</button><button>Press Me</button>
-		<br><button id="coupon$1">Coupon$1</button><button id="btnAddMilk">Milk</button><button>Press Me</button><button>Press Me</button>
+		<button id="coupon$10">Coupon$10</button><button id="btnAddEggs">Eggs</button><button>Press Me</button>
+		<br><button id="coupon$5">Coupon$5</button><button id="btnAddApples">Apples</button><button>Press Me</button>
+		<br><button id="coupon$2">Coupon$2</button><button id="btnAddTomatoes">Tomatoes</button><button>Press Me</button>
+		<br><button id="coupon$1">Coupon$1</button><button id="btnAddMilk">Milk</button><button>Press Me</button>
 	</div>
 	
 	<div id="managementButtons">
 		<button class="supervisor" id="return">Return</button><button class="supervisor" id= "credit">Credit</button><button class="supervisor">Press Me</button><button class="supervisor" id="cancel">Cancel</button>
 		<br><button class="supervisor" id="oLotto">Online</button><button class="supervisor" id="iLotto"> Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button>
-		<br><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button>
-		<br><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button>
 		<br>
 		<a href="file:///C:/Users/abaumil/Desktop/F18/490Project/Supervisor.html">
 		<button id="Manager" style="width: 150px; heght: 100px; background-color:RGB(255 100 100)">Switch to Manager Mode</button>
@@ -471,8 +469,8 @@ $.ajax(	{
 	</div>
 	
 	<div id="mainButtons">
-<button class="main" id="btnAddItem"> Add</button><button class="main" id="btnDeleteItem">Delete</button><button class="main" id= "btnCheckout">Checkout</button><button class="main" id="Receipt">Help</button>
-		<br><button class="main">Press Me</button><button class="main">Press Me</button><button class="main">Press Me</button><button class="main">Press Me</button>
+
+		<button class="main" id="btnAddItem"> Add</button><button class="main" id="btnDeleteItem">Delete</button><button class="main" id= "btnCheckout">Checkout</button>
 	
 	</div>
 	
@@ -491,34 +489,14 @@ $.ajax(	{
 		<input type="submit" value="Submit">
 		</form>
 	</div>
-        <div id="quantity">
-		
+	<div id="quantity">
 		QUANTITY:
 		<form>
-		<input type="text" id="t_QUANTITY" name="t_QUANTITY" value ="0">
+		<input type="text" id="t_QUANTITY" name="t_QUANTITY" value="0">
 		<input type="submit" value="Submit">
 		</form>
 	</div>
-	<!--
-	<div id="receipt">
-		<ul>
-		<div id="receiptText">
-		<li><p id="receipt1">This is a test<span id="receipt1Price">$$</span></p></li>
-		<li><p id="receipt2">This is a test</p></li>
-		<li><p id="receipt3">This is a test</p></li>
-		<li><p id="receipt4">This is a test</p></li>
-		<li><p id="receipt5">This is a test</p></li>
-		<li><p id="receipt6">This is a test</p></li>
-		<li><p id="receipt7">This is a test</p></li>
-		<li><p id="receipt8">This is a test</p></li>
-		<li><p id="receipt9">This is a test</p></li>
-		<li><p id="receipt10">This is a test</p></li>
-		<li><p id="receipt11">This is a test</p></li>
-		<li><p id="receipt12">This is a test</p></li>
-		</div>
-		</ul>
-	</div>
-	-->
+	
 	
 	<div id="receipt">
 	<table id="table">
