@@ -303,11 +303,17 @@ public class StoreFacade {
 	}
 	
 	
-	public String checkout() {
-		    shoppingCart.clear();
+	public String checkout(double total) throws ClassNotFoundException, NamingException, SQLException {
+		    
 		    String result ="Thank you for shopping in ABC Convenient Market!";
+		    Product current=getInventoryId("0");
+		    double currentsales=current.getPrice();
+		    current.setPrice(currentsales+total);
+		    changeInventory(current);
+		    shoppingCart.clear();
 		    return result;
 	}
+	
 	
 
 
