@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="SuperStyles.css">
+	<title>
+	ABC Supervisor
+</title>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+$(document).ready( function(){
+//////
+
+  
+
+
+//alert("Running script");
+//////////// GET 
+
+////////// GET DAILY SALES
+$("#daily").click(function(){
+//salert("clicked");
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/0";
+
+$.ajax(	{
+
+	url:theUrl,
+	type:"GET",
+	dataType:"text",
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArrayA[0].price);
+	var output ="<h3> Daily Sales</h3>";
+	output+="<ul>";
+	//for( var i=0;i<resultArray.length+1;i++)
+	{
+	
+		output+= "<li>"+"$"+resultArrayA.price.toFixed(2)+"</li>";
+		
+	}
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+	
+/////////////////Check Inventory
+/*
+This method scans the UPC field and then shows the properties of the item at that UPC
+
+*/
+$("#btnCheckInventory").click(function(){
+//alert("clicked");
+var UPC=document.getElementById("t_UPC").value;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/"+UPC;
+$.ajax(	{
+
+	url:theUrl,
+	type:"GET",
+	dataType:"text",
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArrayA);
+	//resultArray=resultArrayA[UPC];
+	resultArray=resultArrayA;
+	var output ="<h3> Inventory Checking</h3>";
+	output+="<ul>";
+	//for( var i=0;i<resultArray.length+1;i++)
+	{
+		if(resultArray.onSale==1)
+		{
+		var saleP=(resultArray.salePercent)*100 
+		var onsale= " on sale "+saleP +"% off";
+		}
+		else
+		{
+		var onsale = " not on sale ";
+		}
+		if(resultArray.priceUnit==="e")
+		{//alert("e");
+		output+= "<li>"+resultArray.UPC+")     "+resultArray.name+ " at $  "+resultArray.price+" each"+onsale+"</li>";
+		}
+		else
+		{//alert("X");
+		output+= "<li>"+resultArray.UPC+")     "+resultArray.name+ "  at $  "+resultArray.price+" per pound "+onsale+"</li>";
+		}
+	}
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+////////////////	SET SALES
+	$("#sSales").click(function(){
+//alert("clicked");
+var Sale=document.getElementById("t_UPC").value;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/SetSale/"+Sale;
+$.ajax(	{
+
+	url:theUrl,
+	type:"GET",
+	dataType:"text",
+	success: function(result)
+	{
+	
+	var output ="<h3> Sales</h3>";
+	output+="<ul>";
+	//for( var i=0;i<resultArray.length+1;i++)
+	{
+		output+="<li> Sale of "+Sale+"% was added to all items</ul>"
+	}
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+	
+	
+/////////////	
+///// START CREATE
+
+$("#btnCreateProduct").click(function(){
+//alert("clicked");
+var inputUPC=document.getElementById("t_productUPCCreate").value;
+var inputName=document.getElementById("t_productNameCreate").value;
+var inputPrice=document.getElementById("t_productPriceCreate").value;
+var inputPriceUnit=document.getElementById("t_productPriceUnitCreate").value;
+var inputOnSale=document.getElementById("t_productSaleCreate").value;
+var inputSalePercent=document.getElementById("t_productSalePercentCreate").value;
+var theData="UPC="+inputUPC+"&"+"name="+inputName+"&"+"price="+inputPrice+"&"+"priceUnit="+inputPriceUnit
++"&"+"onSale="+inputOnSale+"&"+"salePercent="+inputSalePercent;
+//alert(theData);
+	//private int UPC;
+		//private String name;
+		//private double price;
+		//private String priceUnit;
+		//private boolean onSale;
+		//private double salePercent;
+
+
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArray=JSON.parse(result);
+	//alert(resultArray);
+	var output ="<h3> Just modified</h3>";
+	output+="<ul>";
+	//for( var i=0;i<resultArray.length+1;i++)
+	{
+		if(inputOnSale=="true")
+		{
+		var saleP=(inputSalePercent)*100 
+		var onsale= " on sale "+saleP +"% off";
+		}
+		else
+		{
+		var onsale = " not on sale ";
+		}
+		if(resultArray.priceUnit==="e")
+		{//alert("e");
+		output+= "<li>"+resultArray.UPC+")     "+resultArray.name+ " at $  "+resultArray.price+" each"+onsale+"</li>";
+		}
+		else
+		{//alert("X");
+		output+= "<li>"+resultArray.UPC+")     "+resultArray.name+ "  at $  "+resultArray.price+" per pound "+onsale+"</li>";
+		}
+	}
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+
+
+
+////// END CREATE
+
+/// Start RETURN
+$("#btnReturn").click(function(){
+//alert("clicked");
+var inputUPC=document.getElementById("t_UPC").value;
+var weight=document.getElementById("t_productQuantity").value;
+var theData="UPC="+inputUPC+"&"+"weight="+weight;
+//alert(theData);
+	//private int UPC;
+		//private String name;
+		//private double price;
+		//private String priceUnit;
+		//private boolean onSale;
+		//private double salePercent;
+
+
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/return";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArray=JSON.parse(result);
+	//alert(resultArray);
+	var output ="<h3> New Daily Sales</h3>";
+	output+="<ul>";
+	var changed=(resultArray.price).toFixed(2);
+	//for( var i=0;i<resultArray.length+1;i++)
+	{
+	output+= "<li>"+"$"+changed+"</li>";
+	}
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+
+
+
+
+/// END RETURN
+
+
+
+
+});// End document get ready
+</script>
+</head>
+
+<body>
+	<h1> 
+
+	ABC Convenience Market SUPERVISOR
+
+	</h1>
+	<!-- border style dictacting from top,right,down, left-->
+	<div style="background-color:cyan;min-height:40px">
+	</div>
+	<div id="mainButtons">
+		<button id="btnCheckInventory">Check UPC</button><button id="sSales">Set Sales</button><button id="daily">Get Daily</button><button id="void">Void</button>
+		<br><button>[PH]</button><button id="btnReturn">Return [PH]</button><button>[PH]</button><button>Press Me</button>
+		<!--
+		<br><button id="4000">Produce</button><button id = "5000">Meat</button><button id="3000">Deli</button><button id="2000">Press Me</button>
+		<br><button>Press Me</button><button>Press Me</button><button>Press Me</button><button>Press Me</button>
+		-->
+	</div>
+	
+	<div id="NAV">
+	<form>
+	<input  type="button" value="Switch to Manager Mode" onclick="window.location.href='http://localhost:63342/webserv1/Manager.html'"style="width:375px;height:100px;background-color:rgb(255,100,100);" />
+	</form>
+	<form>
+	<input  type="button" value="Switch to Cashier Mode" onclick="window.location.href='http://localhost:8080/webserv1/ABC.html'"style="width:375px;height:100px;background-color:rgb(100,100,255);" />
+	</form>
+	</div>
+
+	<div id="numpad">
+		<button id="7">7</button><button id="8">8</button><button id="9">9</button><button id="count">#</button>
+		<br><button id="4">4</button><button id="5">5</button><button id="6">6</button>
+		<br><button id="1">1</button><button id="2">2</button><button id="3">3</button><button id="clear">C</button>
+		<br><button id="*">*</button><button id="0">0</button><button id="point">.</button><button id="enter">Enter</button>
+	
+	</div>
+	<div id="createProduct" style="width: 200px; color: white; background-color:rgb(0,100,76);">
+	<form id="f_createProduct">
+		<label for="t_productUPCCreate">Product UPC: </label>
+		<input type="text" id="t_productUPCCreate" name="UPC" value="0"/>
+		<br>
+		<label for="t_productNameCreate">Product Name: </label>
+		<input type="text" id="t_productNameCreate" name="name" value="NAME"/>
+		<br>
+		<label for="t_productPriceCreate">Product Price: </label>
+		<input type="text" id="t_productPriceCreate" name="price" value="0"/>
+		<br>
+		<label for="t_productPriceUnitCreate">Product Price Unit: </label>
+		<input type="text" id="t_productPriceUnitCreate" value="e" name="priceUnit"/>
+		<br>
+		<label for="t_productSaleCreate">Product Sale: </label>
+		<input type="text" id="t_productSaleCreate" value="false" name="onSale"/>
+		<br>
+		<label for="t_productSalePercentCreate">Product Sale Percent: </label>
+		<input type="text" id="t_productSalePercentCreate" value="0" name="salePercent"/>
+		<br>
+		
+		<!--
+		private int UPC;
+	private String name;
+	private double price;
+	private String priceUnit;
+	private boolean onSale;
+	private double salePercent;
+		
+		-->
+		
+	
+	
+	</form>
+	<button id="btnCreateProduct" style="width: 100px; height: 75px; position:relative left 35px;top:150px;margin-top:10px">Click to add Product</button>
+	</div>
+	<!--<div id="justModified">TEXT</div>-->
+	<div id="upc" style="background-color:rgb(100,255,100)">
+		
+		<label for="t_UPC">UPC </label>
+				<input type="text" id="t_UPC" name="t_UPC" value="0">
+		<label for="t_productQuantity">Product Quantity (each/LBs): </label>
+		<input type="text" id="t_productQuantity" name="quantity" value="0.0"/>
+		
+	</div>
+
+	<div id="receipt">
+	<table id="table">
+		<tr>
+		<td class="product" id="justModified"> Test</td>
+		
+		</tr>
+		
+
+		
+	
+	
+	</table>
+	</div>
+	
+	
+	<!-- Put the js files here to improve load times.
+	-->
+	<!--<script src="ProductControl.js"></script> -->
+	<script src ="numpad.js"></script>
+	
+</body>
+</html>

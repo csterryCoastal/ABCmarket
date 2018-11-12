@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="styles.css">
+	<title>
+	ABC market
+</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script>
+$(document).ready( function(){
+
+
+//alert("Running script");
+var   Total=0;
+var coupon =0;
+  var subTotal=0;
+  $("#btnAddItem").click(function(){
+//alert("clicked");
+var UPC=document.getElementById("t_UPC").value;
+var quantity = document.getElementById("t_QUANTITY").value;
+var theData="UPC="+UPC+"&"+"quantity="+quantity;
+    
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/add/";
+$.support.cors = true;
+$.ajax(	{
+    //$.support.cors = true;
+	//crossDomain: true,
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArrayA);
+        
+	var output ="<h3> Add Item to Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=1;i<resultArrayA.length+1;i++)
+	{
+		
+		//output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA[i].quantity+"   " +resultArrayA[i].purchasePrice+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i-1].name);
+       $("#"+quantval+"").text(resultArrayA[i-1].quantity);
+       $("#"+priceVal).text(resultArrayA[i-1].purchasePrice);
+	   subTotal+=resultArrayA[i-1].purchasePrice;
+				//alert(subTotal);
+	}
+        
+      
+    
+            
+            
+        
+		alert(subTotal);
+        subTotal-=coupon;
+		subTotal=subTotal.toFixed(2);
+        $("#subTotalvalue").html("<h5>"+ subTotal+"</h5>");
+        var Tax = 0.06*subTotal;
+		Tax =Tax.toFixed(2);
+        $("#taxValue").html("<h5>"+ Tax+"</h5>");
+        Total = parseFloat(Tax) + parseFloat(subTotal);
+		Total=Total.toFixed(2);
+        $("#totalValue").html("<h5>"+ Total+"</h5>");
+        
+	output+="</ul>";
+	//$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+///////
+ $("#refresh").click(function(){
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/get";
+$.support.cors = true;
+$.ajax(	{
+    //$.support.cors = true;
+	//crossDomain: true,
+	url:theUrl,
+	type:"GET",
+	dataType:"text",
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArrayA);
+        
+	var output ="<h3> Add Item to Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=1;i<resultArrayA.length+1;i++)
+	{
+		
+		//output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA[i].quantity+"   " +resultArrayA[i].purchasePrice+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i-1].name);
+       $("#"+quantval+"").text(resultArrayA[i-1].quantity);
+       $("#"+priceVal).text(resultArrayA[i-1].purchasePrice);
+	   subTotal+=resultArrayA[i-1].purchasePrice;
+				//alert(subTotal);
+	}
+        
+      
+    
+            
+            
+        
+		//alert(subTotal);
+        subTotal-=coupon;
+		subTotal=subTotal.toFixed(2);
+        $("#subTotalvalue").html("<h5>"+ subTotal+"</h5>");
+        var Tax = 0.06*subTotal;
+		Tax =Tax.toFixed(2);
+        $("#taxValue").html("<h5>"+ Tax+"</h5>");
+        Total = parseFloat(Tax) + parseFloat(subTotal);
+		Total=Total.toFixed(2);
+        $("#totalValue").html("<h5>"+ Total+"</h5>");
+        
+	output+="</ul>";
+	//$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+
+////
+
+
+$("#btnDeleteItem").click(function(){
+//alert("clicked");
+$.support.cors = true;
+
+var UPC=document.getElementById("t_UPC").value;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/delete/"+UPC;
+$.ajax(	{
+
+	url:theUrl,
+	type:"GET",
+	dataType:"text",
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArrayA);
+	//resultArray=resultArrayA[UPC];
+	var output ="<h3> Delete Item from Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=1;i<resultArrayA.length+1;i++)
+	{
+		
+		//output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA[i].quantity+"   " +resultArrayA[i].purchasePrice+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i-1].name);
+       $("#"+quantval+"").text(resultArrayA[i-1].quantity);
+       $("#"+priceVal).text(resultArrayA[i-1].getPurchasePrice);
+	}
+        
+        var subTotal=0;
+    for( var i=1;i<resultArrayA.length+1;i++)
+        {
+            subTotal+=resultArrayA[i-1].purchasePrice; 
+            
+        }
+        subTotal-=coupon;
+        $("#subTotalvalue").text(subTotal);
+        var Tax = 0.06*subTotal;
+        $("#taxValue").text(Tax);
+        Total = Tax + subTotal;
+        $("#totalValue").text(Total);
+        
+	//output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	//$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+
+	$("#btnCheckout").click(function(){
+alert("clicked");
+$.support.cors = true;
+var theData = "price="+Total;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/checkout/";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	//var resultArrayA=JSON.parse(result);
+	//alert(resultArrayA);
+	//resultArray=resultArrayA[UPC];
+	for( var i=1;i<21;i++)
+	{
+		
+		//output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA[i].quantity+"   " +resultArrayA[i].purchasePrice+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text("");
+       $("#"+quantval+"").text("");
+       $("#"+priceVal).text("");
+	   subTotal=0;
+	    $("#subTotalvalue").html("<h5>"+ subTotal+"</h5>");
+        var Tax = 0.06*subTotal;
+		Tax =Tax.toFixed(2);
+        $("#taxValue").html("<h5>"+ Tax+"</h5>");
+        Total = parseFloat(Tax) + parseFloat(subTotal);
+		Total=Total.toFixed(2);
+        $("#totalValue").html("<h5>"+ Total+"</h5>");
+				//alert(subTotal);
+	}
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	//$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+ /*
+	$("#btnAddEggs").click(function(){
+//alert("clicked");
+var UPC=12
+var quantity = 1
+var theData="UPC="+UPC+"&"+"quantity="+quantity;
+    $.support.cors = true;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/add";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArray);
+        
+	var output ="<h3> Add Egg to Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=0;i<resultArrayA.length+1;i++)
+	{
+		
+		output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA[i].quantity+"   " +resultArrayA[i].purchasePrice+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i].name);
+       $("#"+quantval+"").text(resultArrayA[i].quantity);
+       $("#"+priceVal).text(resultArrayA[i].getPurchasePrice);
+	}
+        
+        var subTotal=0;
+    for( var i=0;i<resultArrayA.length+1;i++)
+        {
+            subTotal+=resultArrayA[i].purchasePrice; 
+            
+        }
+        subTotal-=coupon;
+        $("#subTotalvalue").text(subTotal);
+        var Tax = 0.06*subTotal;
+        $("#taxValue").text(Tax);
+        Total = Tax + subTotal;
+        $("#totalValue").text(Total);
+        
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+	
+	$("#btnAddApples").click(function(){
+//alert("clicked");
+var UPC=13
+var quantity = 1
+var theData="UPC="+UPC+"&"+"quantity="+quantity;
+    $.support.cors = true;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/add/";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArray);
+        
+	var output ="<h3> Add Apple to Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=0;i<resultArrayA.length+1;i++)
+	{
+		
+		output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA[i].quantity+"   " +resultArrayA[i].purchasePrice+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i].name);
+       $("#"+quantval+"").text(resultArrayA[i].quantity);
+       $("#"+priceVal).text(resultArrayA[i].getPurchasePrice);
+	}
+        
+        var subTotal=0;
+    for( var i=0;i<resultArrayA.length+1;i++)
+        {
+            subTotal+=resultArrayA[i].purchasePrice; 
+            
+        }
+        subTotal-=coupon;
+        $("#subTotalvalue").text(subTotal);
+        var Tax = 0.06*subTotal;
+        $("#taxValue").text(Tax);
+        Total = Tax + subTotal;
+        $("#totalValue").text(Total);
+        
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+	
+	$("#btnAddTomatoes").click(function(){
+//alert("clicked");
+var UPC=14
+var quantity = 1
+var theData="UPC="+UPC+"&"+"quantity="+quantity;
+    $.support.cors = true;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/add/";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArray);
+        
+	var output ="<h3> Add Tomato to Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=0;i<resultArrayA.length+1;i++)
+	{
+		
+		output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA[i].quantity+"   " +resultArrayA[i].purchasePrice+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i].name);
+       $("#"+quantval+"").text(resultArrayA[i].quantity);
+       $("#"+priceVal).text(resultArrayA[i].getPurchasePrice);
+	}
+        
+        var subTotal=0;
+    for( var i=0;i<resultArrayA.length+1;i++)
+        {
+            subTotal+=resultArrayA[i].purchasePrice; 
+            
+        }
+        subTotal-=coupon;
+        $("#subTotalvalue").text(subTotal);
+        var Tax = 0.06*subTotal;
+        $("#taxValue").text(Tax);
+        Total = Tax + subTotal;
+        $("#totalValue").text(Total);
+        
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+	
+	$("#btnAddMilk").click(function(){
+//alert("clicked");
+var UPC= 15
+var quantity = 1
+var theData="UPC="+UPC+"&"+"quantity="+quantity;
+    $.support.cors = true;
+var theUrl="http://localhost:8080/webserv1/resources/ws2/inventory/add/";
+$.ajax(	{
+
+	url:theUrl,
+	type:"POST",
+	dataType:"text",
+	contentType:"application/x-www-form-urlencoded",
+	data:theData,
+	success: function(result)
+	{
+	var resultArrayA=JSON.parse(result);
+	//alert(resultArray);
+        
+	var output ="<h3> Add Milk to Shopping Cart</h3>";
+	output+="<ul>";
+	for( var i=0;i<resultArrayA.length+1;i++)
+	{
+		
+		output+= "<li>"+resultArrayA[i].name+ "    "+resultArrayA[i].quantity+"   " +resultArrayA[i].purchasePrice+"</li>";
+		
+	var itemVal= "receipt"+i+"Item";
+        var quantval= "receipt"+i+"Quantity";
+        var priceVal= "receipt"+i+"Price";
+
+       $("#"+itemVal+"").text(resultArrayA[i].name);
+       $("#"+quantval+"").text(resultArrayA[i].quantity);
+       $("#"+priceVal).text(resultArrayA[i].getPurchasePrice);
+	}
+        
+        var subTotal=0;
+    for( var i=0;i<resultArrayA.length+1;i++)
+        {
+            subTotal+=resultArrayA[i].purchasePrice; 
+            
+        }
+        subTotal-=coupon;
+        $("#subTotalvalue").text(subTotal);
+        var Tax = 0.06*subTotal;
+        $("#taxValue").text(Tax);
+        Total = Tax + subTotal;
+        $("#totalValue").text(Total);
+        
+	output+="</ul>";
+	<!-- 	private int UPC;private String name;private double price;private String priceUnit;private boolean onSale;
+	<!-- private double salePercent;-->
+	//alert("success");
+	//alert(output);
+	$("#justModified").html(output);
+	},
+	error:function(xhr)
+	{
+	alert("error");
+	$("#justModified").html("Error:"+xhr.status+" "+xhr.statusText);}
+	});
+	});
+    /*
+	$("#coupon$10").click(function(){  
+      
+      coupon=coupont+10;
+       
+  });
+  
+  $("#coupon$5").click(function(){  
+      
+      coupon=coupont+5;
+  });
+    
+      
+  $("#coupon$2").click(function(){  
+      
+      coupon=coupont+2;
+  } );
+    
+    
+    
+  $("#coupon$1").click(function(){  
+      
+      coupon=coupont+1;
+  });
+  */
+	
+}); //end of get ready
+    
+</script>
+</head>
+<body>
+	<h1> 
+
+	ABC Convenience Market
+
+	</h1>
+	<!-- border style dictacting from top,right,down, left-->
+	<div style="background-color:cyan;min-height:40px">
+
+	</div>
+	
+	<div id="leftButtons">
+		<button id="coupon$10">Coupon$10</button><button id="btnAddEggs">Eggs</button><button>Press Me</button>
+		<br><button id="coupon$5">Coupon$5</button><button id="btnAddApples">Apples</button><button>Press Me</button>
+		<br><button id="coupon$2">Coupon$2</button><button id="btnAddTomatoes">Tomatoes</button><button>Press Me</button>
+		<br><button id="coupon$1">Coupon$1</button><button id="btnAddMilk">Milk</button><button>Press Me</button>
+	</div>
+	
+	<div id="managementButtons">
+		<button class="supervisor" id="return">Return</button><button class="supervisor" id= "credit">Credit</button><button class="supervisor">Press Me</button><button class="supervisor" id="refresh">Refresh</button>
+		<br><button class="supervisor" id="oLotto">Online</button><button class="supervisor" id="iLotto"> Press Me</button><button class="supervisor">Press Me</button><button class="supervisor">Press Me</button>
+		<br>
+		
+
+	</div>
+	
+	<div id="mainButtons">
+
+		<button class="main" id="btnAddItem"> Add</button><button class="main" id="btnDeleteItem">Delete</button><button class="main" id= "btnCheckout">Checkout</button>
+	
+	</div>
+	
+	<div id="numpad">
+		<button id="7">7</button><button id="8">8</button><button id="9">9</button><button id="count">#</button>
+		<br><button id="4">4</button><button id="5">5</button><button id="6">6</button>
+		<br><button id="1">1</button><button id="2">2</button><button id="3">3</button><button id="clear">C</button>
+		<br><button id="*">*</button><button id="0">0</button><button id="point">.</button><button id="enter">Enter</button>
+	
+	</div>
+	<div id="upc">
+		
+		UPC:
+		<form>
+		<input type="text" id="t_UPC" name="t_UPC" value="0">
+		</form>
+	</div>
+	<div id="quantity">
+		QUANTITY:
+		<form>
+		<input type="text" id="t_QUANTITY" name="t_QUANTITY" value="0">
+		</form>
+	</div>
+	<div id="justModified">
+	TEST
+	</div>
+	
+	<div id="receipt">
+	<table id="table">
+		<tr>
+		<td class="product" id="receipt1Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt1Quantity" > </td>
+		<td class="cost" align="right"  id="receipt1Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt2Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt2Quantity" > </td>
+		<td class="cost" align="right"  id="receipt2Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt3Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt3Quantity" > </td>
+		<td class="cost" align="right"  id="receipt3Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt4Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt4Quantity" > </td>
+		<td class="cost" align="right"  id="receipt4Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt5Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt5Quantity" > </td>
+		<td class="cost" align="right"  id="receipt5Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt6Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt6Quantity" > </td>
+		<td class="cost" align="right"  id="receipt6Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt7Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt7Quantity" > </td>
+		<td class="cost" align="right"  id="receipt7Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt8Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt8Quantity" > </td>
+		<td class="cost" align="right"  id="receipt8Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt9Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt9Quantity" > </td>
+		<td class="cost" align="right"  id="receipt9Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt10Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt10Quantity" > </td>
+		<td class="cost" align="right"  id="receipt10Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt11Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt11Quantity" > </td>
+		<td class="cost" align="right"  id="receipt11Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt12Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt12Quantity" > </td>
+		<td class="cost" align="right"  id="receipt12Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt13Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt13Quantity" > </td>
+		<td class="cost" align="right"  id="receipt13Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt14Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt14Quantity" > </td>
+		<td class="cost" align="right"  id="receipt14Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt15Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt15Quantity" > </td>
+		<td class="cost" align="right"  id="receipt15Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt16Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt16Quantity" > </td>
+		<td class="cost" align="right"  id="receipt16Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt17Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt17Quantity" > </td>
+		<td class="cost" align="right"  id="receipt17Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+		<tr>
+		<td class="product" id="receipt18Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt18Quantity" > </td>
+		<td class="cost" align="right"  id="receipt18Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+	<tr>
+		<td class="product" id="receipt19Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt19Quantity" > </td>
+		<td class="cost" align="right"  id="receipt19Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+	<tr>
+		<td class="product" id="receipt20Item"> </td>
+		<td class="itemQuantity" align="right" id="receipt20Quantity" > </td>
+		<td class="cost" align="right"  id="receipt20Price"> </td><!-- Using align right to send the price value over to the right hand side-->
+		</tr>
+		
+	
+	
+	</table>
+	</div>
+		<div id="NAV">
+	<form>
+	<input  type="button" value="Switch to Manager Mode" onclick="window.location.href='http://localhost:63342/webserv1/Manager.html'"style="width:375px;height:100px;background-color:rgb(255,100,100);" />
+	</form>
+	<form>
+	<input  type="button" value="Switch to Supervisor Mode" onclick="window.location.href='http://localhost:8080/webserv1/Supervisor.html'"style="width:375px;height:100px;background-color:rgb(100,100,255);" />
+	</form>
+	</div>
+	
+	
+	<div id="totalsection">
+	<table id="subTotalTable">
+	<tr>
+		<td id="subTotal"> Subtotal:</td>
+		<td align="right" id="subTotalvalue">$$</td>
+	</tr>
+	<tr>
+		<td id="tax">Tax:</td>
+		<td id="taxValue" align="right">$$</td>
+	</tr>
+		
+	<tr>
+	<td id="total">Total:</td>
+	<td id="totalValue" align="right" >$$</td>
+	</tr>	
+	</table>
+	</div>
+	
+	<!-- Put the js files here to improve load times.
+	-->
+	<script src="numpad.js"></script>
+</body>
+</html>
